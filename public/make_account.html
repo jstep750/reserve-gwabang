@@ -183,7 +183,11 @@ firebase.initializeApp(firebaseConfig);
 
 function validateEmail(email) {
     const re = /^[a-zA-Z0-9]+@cau\.ac\.kr$$/;
-    return re.test(String(email));
+    const re1 = /^[a-zA-Z0-9]+@korea\.ac\.kr$$/;
+    if(re.test(String(email)) || re1.test(String(email))){
+      return true;
+    }
+    else return false;
 }
 
 function signUpEmail(){
