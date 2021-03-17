@@ -336,8 +336,6 @@ var dataArray = new Array();
 
 var db = firebase.firestore();
 var query = db.collection("reservation").where("date","==",getDate());
-
-idVerified = true;
 query.get()
 .then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
@@ -371,29 +369,75 @@ query.get()
     console.log("Error getting documents: ", error);
 });
 
-var today;
+var query = db.collection("reservation").where("date","==",getNextDate());
+query.get()
+.then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        console.log(doc.id, " => ", doc.data());
+
+        var stt = new Date(doc.get("start"));
+        var endt = new Date(doc.get("end"));
+        var curt = new Date();
+
+        if(stt<= curt && curt<=endt){
+          var temp = new Object();
+          temp.start = doc.get("start");
+          temp.end = doc.get("end");
+          temp.purpose = doc.get("purpose");
+          temp.id = doc.get("id");
+          dataArray.push(temp);
+
+          data.contents = dataArray;
+          // div id=content-placeholder 에 결과 내역을 렌더링한다 
+          $("#content-placeholder").html(template(data));
+          var num = document.getElementById('userNum').textContent*1 + 1;
+          var max = document.getElementById('maxNum').textContent*1;
+          document.getElementById('userNum').textContent = num;
+          if(num>=4){
+            document.getElementById('submitBtn').textContent="신청불가";
+          }
+        }
+    });
+})
+.catch(function(error) {
+    console.log("Error getting documents: ", error);
+});
+
+
+
+var endDay;
+var startTime;
+var endTime;
 
 function validateTime(start, end) {
     const re = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
     console.log("start:"+re.test(String(start))+" end:"+re.test(String(end)));
     if(re.test(String(start)) && re.test(String(end))){
-        var stt = new Date(getDate() + start);
-        stt = stt.getTime();
+        var stt = new Date(getDate() + start).getTime();
+        startTime = new Date(getDate() + start);
 
-        var endt= new Date(getDate() + end);
-        endt = endt.getTime();
+        var endt= new Date(getDate() + end).getTime();
+        endTime = new Date(getDate() + end);
         console.log("start_t:"+stt+" end_t:"+endt);
-        if(stt <= endt){
-          today = getDate();
-          return true;
+
+        var curt = new Date().getTime();
+
+        alert(curt+" "+stt+" "+endt);
+
+        if(endt < curt){
+          if(confirm("종료 시각이 현재 시각보다 빠릅니다. 내일로 예약하시겠습니까?")) {
+            endt = new Date(getNextDate() + end).getTime();
+            endDay = getNextDate();
+            endTime = new Date(getNextDate() + end);
+          }
+          else return false;
         }
-        else{
-          today = getNextDate();
-          var endt= new Date(getNextDate() + end);
-          endt = endt.getTime();
-          console.log("start_t:"+stt+" end_t:"+endt);
-          return true; 
+        if(endt > stt){
+          endt= new Date(getNextDate() + end).getTime();
+          endDay = getNextDate();
+          endTime = new Date(getNextDate() + end);
         }
+        return true;
     } 
     return false;
 }
@@ -417,14 +461,14 @@ function submit(){
   }
   else{
     db.collection("reservation").add({
-      date : today,
-      start : getDate()+start,
-      end : today+end,
+      date : endDay,
+      start : startTime,
+      end : endTime,
       id : userId,
       purpose : purpose
     })
     .then(function(docRef) {
-        if(confirm("제출이 완료되었습니다")) {
+        if(alert("제출이 완료되었습니다")) {
             window.location.href = "mainpage.html";
         }
     })
