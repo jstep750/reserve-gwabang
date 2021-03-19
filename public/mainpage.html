@@ -414,29 +414,28 @@ function validateTime(start, end) {
     console.log("start:"+re.test(String(start))+" end:"+re.test(String(end)));
     if(re.test(String(start)) && re.test(String(end))){
         var stt = new Date(getDate() + start).getTime();
-        startTime = new Date(getDate() + start);
+        startTime = getDate() + start;
 
         var endt= new Date(getDate() + end).getTime();
-        endTime = new Date(getDate() + end);
+        endTime = getDate() + end;
         console.log("start_t:"+stt+" end_t:"+endt);
 
         var curt = new Date().getTime();
-
-        alert(curt+" "+stt+" "+endt);
 
         if(endt < curt){
           if(confirm("종료 시각이 현재 시각보다 빠릅니다. 내일로 예약하시겠습니까?")) {
             endt = new Date(getNextDate() + end).getTime();
             endDay = getNextDate();
-            endTime = new Date(getNextDate() + end);
+            getNextDate() + end;
           }
           else return false;
         }
         if(endt > stt){
           endt= new Date(getNextDate() + end).getTime();
           endDay = getNextDate();
-          endTime = new Date(getNextDate() + end);
+          getNextDate() + end;
         }
+        alert("시작시간:"+startTime+" 종료시간:"+endTime);
         return true;
     } 
     return false;
@@ -468,7 +467,7 @@ function submit(){
       purpose : purpose
     })
     .then(function(docRef) {
-        if(alert("제출이 완료되었습니다")) {
+        if(confirm("제출이 완료되었습니다")) {
             window.location.href = "mainpage.html";
         }
     })

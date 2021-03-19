@@ -131,19 +131,19 @@ td{
                         
                         <!--여기 이런 식으로 각 컴포넌트당 하나씩 데이터 추가해주면 될듯 list-content넣고-->
                         <div class="row" style="font-size: 14px;">
-                          <div class="col-2 list-setting">
+                          <div class="col-1 list-setting">
                               <div class="text-center list-title">이름</div>
                             </div>
                             <div class="col-2 list-setting">
                               <div class="text-center list-title">전화번호</div>
                             </div>
-                            <div class="col-4 list-setting">
+                            <div class="col-2 list-setting">
                               <div class="text-center list-title">이메일</div>
                             </div>
-                            <div class="col-2 list-setting">
+                            <div class="col-1 list-setting">
                               <div class="text-center list-title">학번</div>
                             </div>
-                            <div class="col-2 list-setting">
+                            <div class="col-4 list-setting">
                               <div class="text-center list-title">이용시간</div>
                             </div>
                             <div class="col-2 list-setting">
@@ -194,19 +194,19 @@ td{
   <script id="some-template" type="text/x-handlebars-template">
     {{#contents}}
     <div class="row" style="font-size: 14px;">
-        <div class="col-2 list-setting">
+        <div class="col-1 list-setting">
           <div class="text-center list-content">{{name}}</div>
         </div>
         <div class="col-2 list-setting">
           <div class="text-center list-content">{{contact}}</div>
         </div>
-        <div class="col-4 list-setting">
+        <div class="col-2 list-setting">
           <div class="text-center list-content">{{email}}</div>
         </div>
-        <div class="col-2 list-setting">
+        <div class="col-1 list-setting">
           <div class="text-center list-content">{{id}}</div>
         </div>
-        <div class="col-2 list-setting">
+        <div class="col-4 list-setting">
           <div class="text-center list-content">{{start}} ~ {{end}}</div>
         </div>
         <div class="col-2 list-setting">
@@ -290,15 +290,6 @@ firebase.auth().onAuthStateChanged(function(user) {
       //console.log(user)      // 인증 후 어떤 데이터를 받아오는지 확인해보기 위함.
     }
 });
-
-
-      /*<td>{{name}}</td>
-        <td>{{contack}}</td>
-        <td>{{email}}</td>
-        <td>{{id}}</td>
-        <td>{{start}}</td>
-        <td>{{end}}</td>
-        <td>{{prupose}}</td>*/
 
 // 템플릿 해석
 var source   = $("#some-template").html();
