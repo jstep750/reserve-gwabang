@@ -292,7 +292,8 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
     } else {
       // No user is signed in.
-      alert("로그인 X");
+      window.location.href = "loginpage.html";
+      //alert("로그인 X");
       //console.log(user)      // 인증 후 어떤 데이터를 받아오는지 확인해보기 위함.
     }
 });
