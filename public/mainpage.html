@@ -342,7 +342,8 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
     } else {
       // No user is signed in.
-      alert("로그인 X");
+      //alert("로그인 X");
+      window.location.href = "loginpage.html";
       //console.log(user)		// 인증 후 어떤 데이터를 받아오는지 확인해보기 위함.
     }
 });
@@ -362,13 +363,13 @@ var query = db.collection("reservation").orderBy("created");
 query.get()
 .then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-        console.log(doc.id, " => ", doc.data());
+        //console.log(doc.id, " => ", doc.data());
 
         var stt = new Date(doc.get("start"));
         var endt = new Date(doc.get("end"));
         var curt = new Date();
 
-        alert(stt+" "+curt+" "+endt+" "+flag);
+        //alert(stt+" "+curt+" "+endt+" "+flag);
 
         if(stt<= curt && curt<=endt && flag == true){
           var temp = new Object();
@@ -410,7 +411,7 @@ var query = db.collection("reservation").orderBy("created");
 query.get()
 .then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-        console.log(doc.id, " => ", doc.data());
+        //console.log(doc.id, " => ", doc.data());
 
         var stt = new Date(doc.get("start"));
         var endt = new Date(doc.get("end"));
@@ -427,15 +428,51 @@ query.get()
           data2.contents = dataArray2;
           // div id=content-placeholder 에 결과 내역을 렌더링한다 
           $("#content-placeholder2").html(template(data2));
-          var num = document.getElementById('userNum').textContent*1 + 1;
-          var max = document.getElementById('maxNum').textContent*1;
-          document.getElementById('userNum').textContent = num;
+          //var num = document.getElementById('userNum').textContent*1 + 1;
+          //var max = document.getElementById('maxNum').textContent*1;
+          //document.getElementById('userNum').textContent = num;
         }
     });
 })
 .catch(function(error) {
     console.log("Error getting documents: ", error);
 });
+
+var deleteArr = new Array();
+function cancelReserve(){
+  if(confirm("팝업창에 뜨는 예약내역 중 삭제하고 싶다면 확인, 아니라면 취소를 눌러주세요. \n계속하시겠습니까?")){
+    var db = firebase.firestore();
+    console.log(userId);
+    var query = db.collection("reservation").where("id","==",userId).orderBy("timestamp");
+    query.get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            //console.log(doc.id, " => ", doc.data());
+
+            var stt = new Date(doc.get("start"));
+            var endt = new Date(doc.get("end"));
+            var curt = new Date();
+
+            if(curt<=endt){
+              if(confirm("시작시간: "+doc.get("start")+"\n종료시간: "+doc.get("end")+"\n사유: "+doc.get("purpose"))){
+                deleteArr.push(doc.id);
+                db.collection("reservation").doc(doc.id).delete().then(() => {
+                    alert("Document successfully deleted!");
+                }).catch((error) => {
+                    alert("Error removing document: ", error);
+                });
+              }
+            }
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    }); 
+  } 
+  else{
+    alert("취소되었습니다.");
+  }
+}
 
 
 var endDay;
@@ -468,7 +505,7 @@ function validateTime(start, end) {
           endDay = getNextDate();
           getNextDate() + end;
         }
-        alert("시작시간:"+startTime+" 종료시간:"+endTime);
+        alert("시작시간:"+startTime+" \n종료시간:"+endTime);
         return true;
     } 
     return false;
@@ -514,6 +551,7 @@ function submit(){
 function logout(){
   firebase.auth().signOut().then(function() {
       alert("로그아웃 성공");
+      window.location.href = "loginpage.html";
     // Sign-out successful.
     }).catch(function(error) {
       alert("에러");
