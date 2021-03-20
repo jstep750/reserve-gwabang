@@ -507,17 +507,20 @@ function validateTime(start, end) {
         var curt = new Date().getTime();
 
         if(endt < curt){
-          if(confirm("종료 시각이 현재 시각보다 빠릅니다. 내일 "+end+"로 예약하시겠습니까?")) {
+          if(confirm("종료 시간이 현재 시간보다 빠릅니다. 내일 "+end+"로 예약하시겠습니까?")) {
             endt = new Date(getNextDate() + end).getTime();
             endTime = getNextDate() + end;
             getNextDate() + end;
           }
           else return false;
         }
-        if(endt > stt){
-          endt= new Date(getNextDate() + end).getTime();
-          endTime = getNextDate() + end;
-          getNextDate() + end;
+        if(endt < stt){
+          if(confirm("종료 시간이 시작 시간보다 빠릅니다. 내일 "+end+"로 예약하시겠습니까?")) {
+            endt= new Date(getNextDate() + end).getTime();
+            endTime = getNextDate() + end;
+            getNextDate() + end;
+          }
+          else return false;
         }
         alert("시작시간:"+startTime+" \n종료시간:"+endTime);
         return true;
